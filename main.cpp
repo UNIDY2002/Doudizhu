@@ -1,9 +1,9 @@
 #include <QApplication>
-#include <QWidget>
+#include <ui/Welcome.h>
 
 int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
-    QWidget w;
+    Welcome w;
     w.show();
     return QApplication::exec();
 }

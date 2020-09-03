@@ -15,7 +15,7 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_PREFIX_PATH C:/Qt/5.15.0/mingw81_64)
 
 # For new modules, simply add them here.
-find_package(Qt5 COMPONENTS Core Gui Widgets REQUIRED)
+find_package(Qt5 COMPONENTS Core Gui Network Widgets REQUIRED)
 
 aux_source_directory(. DIRS_SRCS)
 
@@ -24,7 +24,7 @@ include_directories(.)
 # Resource files are supposed to be added below.
 qt5_add_resources(QRC_FILES)
 
-add_executable(Doudizhu main.cpp ${QRC_FILES})
+add_executable(Doudizhu main.cpp ${QRC_FILES} ui/Welcome.cpp ui/Welcome.h network/NetworkPolicy.cpp network/NetworkPolicy.h network/DecentralizedServer.cpp network/DecentralizedServer.h network/DecentralizedClient.cpp network/DecentralizedClient.h)
 
 # And do not forget to link new modules here.
-target_link_libraries(Doudizhu Qt5::Core Qt5::Gui Qt5::Widgets)
+target_link_libraries(Doudizhu Qt5::Core Qt5::Gui Qt5::Network Qt5::Widgets)
