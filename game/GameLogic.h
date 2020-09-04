@@ -3,11 +3,15 @@
 
 #include <QtCore/QObject>
 #include <network/utils.h>
+#include <QtWidgets/QPushButton>
 
 class GameLogic : public QObject {
 Q_OBJECT
 
     int order;
+
+    bool someoneCalled = false;
+    int callingStatus[3]{}; // 1: positive; -1: negative
 
     QStringList cardPile;
 
@@ -24,9 +28,19 @@ signals:
 
     void sendMessage(const Message &message);
 
+    void callingStatusUpdated(int id, bool call, bool someoneCalled, int myOrder);
+
 public slots:
 
     void onMessage(const Message &message);
+
+private:
+
+    void processButtons(QPushButton *positive, QPushButton *negative);
+
+private slots:
+
+    void call(bool choice);
 
 };
 

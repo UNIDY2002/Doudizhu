@@ -27,6 +27,8 @@ private slots:
 
     void updateCards(const QStringList &cards);
 
+    void updateCallingStatus(int id, bool call, bool someoneCalled, int myOrder);
+
 };
 
 #endif //DOUDIZHU_GAME_H

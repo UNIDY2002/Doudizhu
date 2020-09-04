@@ -14,6 +14,8 @@ enum Type {
     DUMMY_MESSAGE,
     CONFIRM_CONNECTION,
     GAME_STARTS,
+    CALL,
+    NOT_CALL,
 };
 
 struct Message {
