@@ -20,4 +20,19 @@ public:
     ~WaitForConnectionThread() override;
 };
 
+class WaitForReadyReadThread : public QThread {
+
+    QTcpSocket *socket;
+
+    GameLogic *logic;
+
+protected:
+    [[noreturn]] void run() override;
+
+public:
+    WaitForReadyReadThread(QObject *parent, QTcpSocket *socket, GameLogic *logic);
+
+    ~WaitForReadyReadThread() override;
+};
+
 #endif //DOUDIZHU_THREADING_H

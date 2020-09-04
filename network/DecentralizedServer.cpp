@@ -53,3 +53,18 @@ void DecentralizedServer::addClient() {
 void DecentralizedServer::afterLinking() {
     emit updateMessage("等待连接 (0/2)");
 }
+
+void DecentralizedServer::prepare(GameLogic *logic) {
+    for (int i = 0; i < 2; ++i) {
+        connect(clients[i], &QTcpSocket::readyRead, [=]() {
+            Message message;
+            while ((message = read(clients[i])).type) {
+                write(clients[1 - i], message);
+                logic->onMessage(message);
+            }
+        });
+    }
+    connect(logic, &GameLogic::sendMessage, [&](const Message &message) {
+        for (auto &client : clients) write(client, message);
+    });
+}

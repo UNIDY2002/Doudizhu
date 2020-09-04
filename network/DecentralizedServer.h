@@ -24,6 +24,8 @@ public:
 
     void afterLinking() override;
 
+    void prepare(GameLogic *logic) override;
+
 };
 
 #endif //DOUDIZHU_DECENTRALIZEDSERVER_H

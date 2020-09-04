@@ -13,3 +13,7 @@ GameLogic::GameLogic(int order, const QStringList &cards, QObject *parent) :
 }
 
 GameLogic::~GameLogic() = default;
+
+void GameLogic::onMessage(const Message &message) {
+    cout << "On message: " << message.type << " " << message.payload.toStdString() << endl;
+}

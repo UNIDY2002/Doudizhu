@@ -49,3 +49,11 @@ void DecentralizedClient::waitForGameStarts() {
     }
     emit updateMessage("连接失败，请重试");
 }
+
+void DecentralizedClient::prepare(GameLogic *logic) {
+    connect(logic, &GameLogic::sendMessage, [=](const Message &message) {
+        write(client, message);
+    });
+    auto thread = new WaitForReadyReadThread(this, client, logic);
+    thread->start();
+}

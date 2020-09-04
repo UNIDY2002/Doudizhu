@@ -4,6 +4,10 @@ Game::Game(NetworkPolicy *policy, int order, const QStringList &cards, QWidget *
         QWidget(parent), policy(policy), logic(new GameLogic(order, cards)), ui(new Ui::Game) {
     ui->setupUi(this);
     updateCards(logic->myCards);
+    policy->prepare(logic);
+    connect(ui->dummy, &QPushButton::clicked, [&]() {
+        logic->sendMessage({DUMMY_MESSAGE});
+    });
 }
 
 Game::~Game() {

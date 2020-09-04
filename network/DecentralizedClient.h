@@ -18,6 +18,8 @@ public:
     /* possibly blocking method */
     void waitForGameStarts();
 
+    void prepare(GameLogic *logic) override;
+
 };
 
 #endif //DOUDIZHU_DECENTRALIZEDCLIENT_H

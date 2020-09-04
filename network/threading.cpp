@@ -1,5 +1,4 @@
 #include "threading.h"
-#include "utils.h"
 
 WaitForConnectionThread::WaitForConnectionThread(QObject *parent, QTcpSocket *socket, DecentralizedClient *policy) :
         QThread(parent), socket(socket), policy(policy) {}
@@ -29,5 +28,22 @@ void WaitForConnectionThread::run() {
     } else {
         emit policy->updateMessage("连接超时，请重试");
         // TODO: why cannot exit with code 0 in this case?
+    }
+}
+
+WaitForReadyReadThread::WaitForReadyReadThread(QObject *parent, QTcpSocket *socket, GameLogic *logic) :
+        QThread(parent), socket(socket), logic(logic) {}
+
+WaitForReadyReadThread::~WaitForReadyReadThread() = default;
+
+// TODO: why isn't readyRead signal available?
+[[noreturn]] void WaitForReadyReadThread::run() {
+    while (true) {
+        if (socket->waitForReadyRead()) {
+            Message message;
+            while ((message = read(socket)).type) {
+                logic->onMessage(message);
+            }
+        }
     }
 }

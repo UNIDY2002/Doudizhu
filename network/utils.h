@@ -11,6 +11,7 @@ using std::endl;
 
 enum Type {
     undefined,
+    DUMMY_MESSAGE,
     CONFIRM_CONNECTION,
     GAME_STARTS,
 };

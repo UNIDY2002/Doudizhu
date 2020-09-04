@@ -3,6 +3,7 @@
 
 #include <QtCore/QObject>
 #include <network/utils.h>
+#include <game/GameLogic.h>
 
 class NetworkPolicy : public QObject {
 Q_OBJECT
@@ -13,6 +14,8 @@ public:
     ~NetworkPolicy() override;
 
     virtual void afterLinking() = 0;
+
+    virtual void prepare(GameLogic *logic) = 0;
 
 signals:
 

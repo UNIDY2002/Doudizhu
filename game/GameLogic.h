@@ -2,6 +2,7 @@
 #define DOUDIZHU_GAMELOGIC_H
 
 #include <QtCore/QObject>
+#include <network/utils.h>
 
 class GameLogic : public QObject {
 Q_OBJECT
@@ -18,6 +19,14 @@ public:
     explicit GameLogic(int order, const QStringList &cards, QObject *parent = nullptr);
 
     ~GameLogic() override;
+
+signals:
+
+    void sendMessage(const Message &message);
+
+public slots:
+
+    void onMessage(const Message &message);
 
 };
 
