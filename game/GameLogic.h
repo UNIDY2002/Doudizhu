@@ -11,6 +11,7 @@ Q_OBJECT
     int order;
 
     bool someoneCalled = false;
+
     int callingStatus[3]{}; // 1: positive; -1: negative
 
     QStringList cardPile;
@@ -30,6 +31,8 @@ signals:
 
     void callingStatusUpdated(int id, bool call, bool someoneCalled, int myOrder);
 
+    void cardsUpdated();
+
 public slots:
 
     void onMessage(const Message &message);
@@ -37,6 +40,8 @@ public slots:
 private:
 
     void processButtons(QPushButton *positive, QPushButton *negative);
+
+    void setLandlord();
 
 private slots:
 

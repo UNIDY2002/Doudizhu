@@ -6,6 +6,7 @@ Game::Game(NetworkPolicy *policy, int order, const QStringList &cards, QWidget *
     updateCards();
     policy->prepare(logic);
     connect(logic, &GameLogic::callingStatusUpdated, this, &Game::updateCallingStatus);
+    connect(logic, &GameLogic::cardsUpdated, this, &Game::updateCards);
 
     // To be refactored...
     switch (order) {
@@ -65,5 +66,7 @@ void Game::updateCallingStatus(int id, bool call, bool someoneCalled, int myOrde
         } else {
             logic->processButtons(ui->positive2, ui->negative2);
         }
+    } else if (id == 2) {
+        logic->setLandlord();
     }
 }

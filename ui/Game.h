@@ -23,7 +23,7 @@ public:
 
     ~Game() override;
 
-private:
+private slots:
 
     void updateCards();
 

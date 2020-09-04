@@ -5,6 +5,7 @@ GameLogic::GameLogic(int order, const QStringList &cards, QObject *parent) :
         QObject(parent), order(order), cardPile(cards),
         myCards(cards.begin() + (order * 17), cards.begin() + ((order + 1) * 17)) {
     std::sort(myCards.begin(), myCards.end(), &cardCmp);
+    cout << "I am " << order << endl;
 }
 
 GameLogic::~GameLogic() = default;
@@ -16,14 +17,14 @@ void GameLogic::onMessage(const Message &message) {
             auto id = message.payload.toInt();
             auto lastSomeoneCalled = someoneCalled;
             someoneCalled = true;
-            emit callingStatusUpdated(id, true, lastSomeoneCalled, order);
             callingStatus[id] = 1;
+            emit callingStatusUpdated(id, true, lastSomeoneCalled, order);
             break;
         }
         case NOT_CALL: {
             auto id = message.payload.toInt();
-            emit callingStatusUpdated(id, false, someoneCalled, order);
             callingStatus[id] = -1;
+            emit callingStatusUpdated(id, false, someoneCalled, order);
             break;
         }
         default:
@@ -48,6 +49,19 @@ void GameLogic::processButtons(QPushButton *positive, QPushButton *negative) {
     });
 }
 
+void GameLogic::setLandlord() {
+    auto state = (callingStatus[1] + 1) + (callingStatus[2] + 1) / 2;
+    int landlord[4]{0, 2, 1, 2};
+    cout << "Landlord: " << landlord[state] << endl;
+    if (landlord[state] == order) {
+        myCards.append(cardPile[51]);
+        myCards.append(cardPile[52]);
+        myCards.append(cardPile[53]);
+        std::sort(myCards.begin(), myCards.end(), &cardCmp);
+        emit cardsUpdated();
+    }
+}
+
 void GameLogic::call(bool choice) {
     if (choice) {
         someoneCalled = true;
@@ -56,5 +70,8 @@ void GameLogic::call(bool choice) {
     } else {
         callingStatus[order] = -1;
         emit sendMessage({NOT_CALL, QString::number(order)});
+    }
+    if (order == 2) {
+        setLandlord();
     }
 }
