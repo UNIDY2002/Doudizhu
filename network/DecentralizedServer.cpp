@@ -26,6 +26,7 @@ void DecentralizedServer::addClient() {
             for (auto c : clients) {
                 write(c, {GAME_STARTS});
             }
+            emit gameStarts();
         }
     }
 }

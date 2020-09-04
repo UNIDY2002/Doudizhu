@@ -29,6 +29,7 @@ void DecentralizedClient::waitForGameStarts() {
     }
     if (message.type == GAME_STARTS) {
         emit updateMessage("游戏开始");
+        emit gameStarts();
     } else {
         emit updateMessage("连接失败，请重试");
     }

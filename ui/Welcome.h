@@ -39,6 +39,8 @@ public slots:
     void setupDecentralizedServer();
 
     void setupDecentralizedClient();
+
+    void startGame();
 };
 
 #endif //DOUDIZHU_WELCOME_H

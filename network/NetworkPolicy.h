@@ -22,6 +22,8 @@ signals:
 
     void updateMessage(const QString &msg);
 
+    void gameStarts();
+
 };
 
 #endif //DOUDIZHU_NETWORKPOLICY_H
