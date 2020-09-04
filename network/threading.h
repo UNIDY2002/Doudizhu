@@ -3,19 +3,19 @@
 
 #include <QtCore/QThread>
 #include <QtNetwork/QTcpSocket>
-#include "NetworkPolicy.h"
+#include "DecentralizedClient.h"
 
 class WaitForConnectionThread : public QThread {
 
     QTcpSocket *socket;
 
-    NetworkPolicy *policy;
+    DecentralizedClient *policy;
 
 protected:
     void run() override;
 
 public:
-    WaitForConnectionThread(QObject *parent, QTcpSocket *socket, NetworkPolicy *policy);
+    WaitForConnectionThread(QObject *parent, QTcpSocket *socket, DecentralizedClient *policy);
 
     ~WaitForConnectionThread() override;
 };

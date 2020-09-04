@@ -1,7 +1,7 @@
 #include "threading.h"
 #include "utils.h"
 
-WaitForConnectionThread::WaitForConnectionThread(QObject *parent, QTcpSocket *socket, NetworkPolicy *policy) :
+WaitForConnectionThread::WaitForConnectionThread(QObject *parent, QTcpSocket *socket, DecentralizedClient *policy) :
         QThread(parent), socket(socket), policy(policy) {}
 
 WaitForConnectionThread::~WaitForConnectionThread() = default;
@@ -16,6 +16,7 @@ void WaitForConnectionThread::run() {
             if (ok) {
                 if (number < 2) {
                     emit policy->updateMessage("连接成功，请稍候");
+                    policy->waitForGameStarts();
                 } else {
                     emit policy->updateMessage("人数已满，请重试");
                 }

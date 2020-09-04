@@ -12,6 +12,7 @@ using std::endl;
 enum Type {
     undefined,
     CONFIRM_CONNECTION,
+    GAME_STARTS,
 };
 
 struct Message {

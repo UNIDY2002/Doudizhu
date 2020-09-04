@@ -22,6 +22,11 @@ void DecentralizedServer::addClient() {
     if (clientNumber < 2) {
         clients[clientNumber++] = client;
         emit updateMessage("等待连接 (" + QString::number(clientNumber) + "/2)");
+        if (clientNumber == 2) {
+            for (auto c : clients) {
+                write(c, {GAME_STARTS});
+            }
+        }
     }
 }
 

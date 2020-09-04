@@ -15,6 +15,9 @@ public:
 
     void afterLinking() override;
 
+    /* possibly blocking method */
+    void waitForGameStarts();
+
 };
 
 #endif //DOUDIZHU_DECENTRALIZEDCLIENT_H

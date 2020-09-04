@@ -20,7 +20,7 @@ Message read(QTcpSocket *socket) {
             return {type, payload};
         }
     }
-    return {undefined, QString()};
+    return {};
 }
 
 
