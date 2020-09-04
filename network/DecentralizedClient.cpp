@@ -13,8 +13,7 @@ DecentralizedClient::~DecentralizedClient() {
 }
 
 void DecentralizedClient::afterLinking() {
-    auto thread = new WaitForConnectionThread(this, client, this);
-    thread->start();
+    (new WaitForConnectionThread(this, client, this))->start();
 }
 
 void DecentralizedClient::waitForGameStarts() {
@@ -54,6 +53,5 @@ void DecentralizedClient::prepare(GameLogic *logic) {
     connect(logic, &GameLogic::sendMessage, [=](const Message &message) {
         write(client, message);
     });
-    auto thread = new WaitForReadyReadThread(this, client, logic);
-    thread->start();
+    (new WaitForReadyReadThread(this, client, logic))->start();
 }

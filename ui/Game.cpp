@@ -3,7 +3,7 @@
 Game::Game(NetworkPolicy *policy, int order, const QStringList &cards, QWidget *parent) :
         QWidget(parent), policy(policy), logic(new GameLogic(order, cards)), ui(new Ui::Game) {
     ui->setupUi(this);
-    updateCards(logic->myCards);
+    updateCards();
     policy->prepare(logic);
     connect(logic, &GameLogic::callingStatusUpdated, this, &Game::updateCallingStatus);
 
@@ -40,8 +40,8 @@ Game::~Game() {
     delete ui;
 }
 
-void Game::updateCards(const QStringList &cards) {
-    ui->cards->setText(cards.join(' '));
+void Game::updateCards() {
+    ui->cards->setText(logic->myCards.join(' '));
 }
 
 void Game::updateCallingStatus(int id, bool call, bool someoneCalled, int myOrder) {

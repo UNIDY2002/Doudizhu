@@ -24,9 +24,6 @@ signals:
 
     void gameStarts(int order, const QStringList &cards);
 
-    // This message refers to the one defined in `utils.h`
-    void onMessage(const Message &message);
-
 };
 
 #endif //DOUDIZHU_NETWORKPOLICY_H

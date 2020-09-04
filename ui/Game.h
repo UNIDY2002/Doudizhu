@@ -23,9 +23,9 @@ public:
 
     ~Game() override;
 
-private slots:
+private:
 
-    void updateCards(const QStringList &cards);
+    void updateCards();
 
     void updateCallingStatus(int id, bool call, bool someoneCalled, int myOrder);
 

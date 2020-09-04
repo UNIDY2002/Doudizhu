@@ -4,15 +4,10 @@
 #include <QtWidgets/QWidget>
 #include <network/NetworkPolicy.h>
 #include <network/DecentralizedServer.h>
+#include <network/DecentralizedClient.h>
 #include "ui_welcome.h"
 
 #define PORT 9042
-
-#include <iostream>
-#include <network/DecentralizedClient.h>
-
-using std::cout;
-using std::endl;
 
 namespace Ui {
     class Welcome;
