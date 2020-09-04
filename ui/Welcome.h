@@ -26,7 +26,7 @@ Q_OBJECT
     NetworkPolicy *networkPolicy = nullptr;
 
 public:
-    explicit Welcome(QWidget *parent = nullptr);
+    explicit Welcome(int param = 0, QWidget *parent = nullptr);
 
     ~Welcome() override;
 

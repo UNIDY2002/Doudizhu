@@ -1,8 +1,13 @@
 #include "Welcome.h"
 #include "Game.h"
 
-Welcome::Welcome(QWidget *parent) : QWidget(parent), ui(new Ui::Welcome) {
+Welcome::Welcome(int param, QWidget *parent) : QWidget(parent), ui(new Ui::Welcome) {
     ui->setupUi(this);
+    if (param == 'S') {
+        emit ui->serverButton->click();
+    } else if (param == 'C') {
+        emit ui->clientButton->click();
+    }
 }
 
 Welcome::~Welcome() {
