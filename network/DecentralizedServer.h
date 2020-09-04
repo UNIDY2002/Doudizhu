@@ -22,6 +22,8 @@ public:
 
     ~DecentralizedServer() override;
 
+    void afterLinking() override;
+
 };
 
 #endif //DOUDIZHU_DECENTRALIZEDSERVER_H

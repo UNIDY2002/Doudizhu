@@ -13,6 +13,8 @@ public:
 
     ~DecentralizedClient() override;
 
+    void afterLinking() override;
+
 };
 
 #endif //DOUDIZHU_DECENTRALIZEDCLIENT_H

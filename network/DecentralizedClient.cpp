@@ -1,4 +1,6 @@
 #include "DecentralizedClient.h"
+#include "utils.h"
+#include "threading.h"
 
 DecentralizedClient::DecentralizedClient(const QHostAddress &address, quint16 port, QObject *parent) :
         NetworkPolicy(parent), client(new QTcpSocket(parent)) {
@@ -8,4 +10,9 @@ DecentralizedClient::DecentralizedClient(const QHostAddress &address, quint16 po
 DecentralizedClient::~DecentralizedClient() {
     client->close();
     delete client;
+}
+
+void DecentralizedClient::afterLinking() {
+    auto thread = new WaitForConnectionThread(this, client, this);
+    thread->start();
 }

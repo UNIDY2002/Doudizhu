@@ -24,7 +24,7 @@ include_directories(.)
 # Resource files are supposed to be added below.
 qt5_add_resources(QRC_FILES)
 
-add_executable(Doudizhu main.cpp ${QRC_FILES} ui/Welcome.cpp ui/Welcome.h network/NetworkPolicy.cpp network/NetworkPolicy.h network/DecentralizedServer.cpp network/DecentralizedServer.h network/DecentralizedClient.cpp network/DecentralizedClient.h)
+add_executable(Doudizhu main.cpp ${QRC_FILES} ui/Welcome.cpp ui/Welcome.h network/NetworkPolicy.cpp network/NetworkPolicy.h network/DecentralizedServer.cpp network/DecentralizedServer.h network/DecentralizedClient.cpp network/DecentralizedClient.h network/utils.h network/utils.cpp network/threading.cpp network/threading.h)
 
 # And do not forget to link new modules here.
 target_link_libraries(Doudizhu Qt5::Core Qt5::Gui Qt5::Network Qt5::Widgets)
