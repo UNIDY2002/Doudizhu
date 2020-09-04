@@ -1,5 +1,5 @@
+#include <game/utils.h>
 #include "DecentralizedClient.h"
-#include "utils.h"
 #include "threading.h"
 
 DecentralizedClient::DecentralizedClient(const QHostAddress &address, quint16 port, QObject *parent) :
@@ -28,9 +28,24 @@ void DecentralizedClient::waitForGameStarts() {
         }
     }
     if (message.type == GAME_STARTS) {
-        emit updateMessage("游戏开始");
-        emit gameStarts();
-    } else {
-        emit updateMessage("连接失败，请重试");
+        // auto segments = message.payload.split(',');
+        // QString::split is only available after 5.14
+        // The following serves as a workaround:
+        auto byteArray = QByteArray();
+        byteArray.append(message.payload);
+        auto segments = byteArray.split(',');
+        if (segments.size() == CARD_NUM + 1) {
+            bool ok;
+            auto order = segments[0].toInt(&ok);
+            segments.pop_front();
+            auto list = QStringList();
+            for (const auto &s: segments) list.append(s);
+            if (ok) {
+                emit updateMessage("游戏开始");
+                emit gameStarts(order, list);
+                return;
+            }
+        }
     }
+    emit updateMessage("连接失败，请重试");
 }

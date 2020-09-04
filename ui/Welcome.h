@@ -40,7 +40,7 @@ public slots:
 
     void setupDecentralizedClient();
 
-    void startGame();
+    void startGame(int order, const QStringList &cards);
 };
 
 #endif //DOUDIZHU_WELCOME_H

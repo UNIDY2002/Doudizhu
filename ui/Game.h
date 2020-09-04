@@ -3,6 +3,7 @@
 
 #include <QtWidgets/QWidget>
 #include <network/NetworkPolicy.h>
+#include <game/GameLogic.h>
 #include "ui_game.h"
 
 namespace Ui {
@@ -13,12 +14,18 @@ class Game : public QWidget {
 
     NetworkPolicy *policy;
 
+    GameLogic *logic;
+
     Ui::Game *ui;
 
 public:
-    explicit Game(NetworkPolicy *policy, QWidget *parent = nullptr);
+    explicit Game(NetworkPolicy *policy, int order, const QStringList &cards, QWidget *parent = nullptr);
 
     ~Game() override;
+
+private slots:
+
+    void updateCards(const QStringList &cards);
 
 };
 

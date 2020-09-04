@@ -1,5 +1,5 @@
-#ifndef DOUDIZHU_UTILS_H
-#define DOUDIZHU_UTILS_H
+#ifndef DOUDIZHU_NETWORK_UTILS_H
+#define DOUDIZHU_NETWORK_UTILS_H
 
 #include <QtCore/QString>
 #include <QtNetwork/QTcpSocket>
@@ -24,4 +24,4 @@ void write(QTcpSocket *socket, const Message &message);
 
 Message read(QTcpSocket *socket);
 
-#endif //DOUDIZHU_UTILS_H
+#endif //DOUDIZHU_NETWORK_UTILS_H

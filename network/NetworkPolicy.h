@@ -2,11 +2,7 @@
 #define DOUDIZHU_NETWORKPOLICY_H
 
 #include <QtCore/QObject>
-
-#include <iostream>
-
-using std::cout;
-using std::endl;
+#include <network/utils.h>
 
 class NetworkPolicy : public QObject {
 Q_OBJECT
@@ -20,9 +16,13 @@ public:
 
 signals:
 
+    // This message refers to the message shown on the preparation screen.
     void updateMessage(const QString &msg);
 
-    void gameStarts();
+    void gameStarts(int order, const QStringList &cards);
+
+    // This message refers to the one defined in `utils.h`
+    void onMessage(const Message &message);
 
 };
 

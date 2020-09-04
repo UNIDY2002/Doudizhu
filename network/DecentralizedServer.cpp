@@ -1,6 +1,8 @@
 #include <QtWidgets/QMessageBox>
+#include <QtCore/QRandomGenerator>
+#include <game/utils.h>
+#include <network/utils.h>
 #include "DecentralizedServer.h"
-#include "utils.h"
 
 DecentralizedServer::DecentralizedServer(const QHostAddress &address, quint16 port, QObject *parent) :
         NetworkPolicy(parent), server(new QTcpServer(parent)) {
@@ -23,10 +25,27 @@ void DecentralizedServer::addClient() {
         clients[clientNumber++] = client;
         emit updateMessage("等待连接 (" + QString::number(clientNumber) + "/2)");
         if (clientNumber == 2) {
-            for (auto c : clients) {
-                write(c, {GAME_STARTS});
+            int perms[6][3]{0, 1, 2,
+                            0, 2, 1,
+                            1, 0, 2,
+                            1, 2, 0,
+                            2, 0, 1,
+                            2, 1, 0};
+            int randPerm = QRandomGenerator::global()->bounded(6);
+            auto cards = genCards();
+            for (int i = CARD_NUM; i; --i) {
+                int j = QRandomGenerator::global()->bounded(i);
+                swap(cards[i - 1], cards[j]);
             }
-            emit gameStarts();
+            auto stringifiedCards = QString();
+            for (const auto &card:cards) {
+                stringifiedCards.append(',');
+                stringifiedCards.append(card);
+            }
+            for (int i = 0; i < 2; ++i) {
+                write(clients[i], {GAME_STARTS, QString::number(perms[randPerm][i]) + stringifiedCards});
+            }
+            emit gameStarts(perms[randPerm][2], cards);
         }
     }
 }

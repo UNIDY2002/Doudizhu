@@ -38,7 +38,7 @@ void Welcome::setupDecentralizedClient() {
     linkNetworkPolicy();
 }
 
-void Welcome::startGame() {
+void Welcome::startGame(int order, const QStringList &cards) {
     hide();
-    (new Game(networkPolicy))->show();
+    (new Game(networkPolicy, order, cards))->show();
 }
