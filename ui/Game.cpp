@@ -16,6 +16,8 @@ Game::Game(NetworkPolicy *policy, int order, const QStringList &cards, QWidget *
     connect(logic, &GameLogic::callingStatusUpdated, this, &Game::updateCallingStatus);
     connect(logic, &GameLogic::cardsUpdated, this, &Game::updateCards);
     connect(logic, &GameLogic::cardsEnabled, this, &Game::enableCards);
+    connect(logic, &GameLogic::metaRefreshed, this, &Game::refreshMeta);
+    connect(logic, &GameLogic::messageUpdated, this, &Game::updateMessage);
 
     connect(ui->positiveAction, &QPushButton::clicked, [=]() {
         logic->discard(pickedCardsCache);
@@ -110,6 +112,7 @@ void Game::updateCallingStatus(int id, bool call, bool someoneCalled, int myOrde
         }
     } else if (id == 2) {
         logic->setLandlord();
+        refreshMeta();
     }
 }
 
@@ -122,4 +125,19 @@ void Game::checkValidity() {
     }
 
     ui->positiveAction->setEnabled(!pickedCardsCache.isEmpty());
+}
+
+void Game::refreshMeta() {
+    ui->dipai->setText(logic->cardPile[51] + " " + logic->cardPile[52] + " " + logic->cardPile[53]);
+    auto lowerId = (logic->order + 1) % 3;
+    ui->lower->setText((lowerId == logic->landlordId ? "[地主] " : "[农民] ") +
+                       QString::number(logic->otherNumber[lowerId]));
+    auto upperId = (logic->order + 2) % 3;
+    ui->upper->setText((upperId == logic->landlordId ? "[地主] " : "[农民] ") +
+                       QString::number(logic->otherNumber[upperId]));
+}
+
+void Game::updateMessage(int id, const QString &message) {
+    (id == logic->order ? ui->myMessage : id == (logic->order + 1) % 3 ? ui->lowerMessage : ui->upperMessage)
+            ->setText(message);
 }

@@ -38,18 +38,22 @@ void GameLogic::onMessage(const Message &message) {
             for (const auto &segment: segments) {
                 lastDiscards.append(segment);
             }
-            if ((lastDiscardId + 1) % 3 == order) {
-                emit cardsEnabled();
-            }
             otherNumber[lastDiscardId] -= lastDiscards.size();
             if (otherNumber[lastDiscardId] <= 0) {
                 cout << lastDiscardId << " won." << endl;
-            }
-        }
-        case PASS: {
-            if ((message.payload.toInt() + 1) % 3 == order) {
+                emit messageUpdated(order, lastDiscardId == landlordId ? "地主胜利" : "农民胜利");
+            } else if ((lastDiscardId + 1) % 3 == order) {
                 emit cardsEnabled();
             }
+            emit metaRefreshed();
+            emit messageUpdated(lastDiscardId, lastDiscards.join(" "));
+            break;
+        }
+        case PASS: {
+            auto id = message.payload.toInt();
+            if ((id + 1) % 3 == order) emit cardsEnabled();
+            emit messageUpdated(id, "不要");
+            break;
         }
         default:
             break;
@@ -99,6 +103,7 @@ void GameLogic::call(bool choice) {
     }
     if (order == 2) {
         setLandlord();
+        emit metaRefreshed();
     }
 }
 
@@ -107,9 +112,14 @@ void GameLogic::discard(const QStringList &cards) {
     for (const auto &card : cards) myCards.removeOne(card);
     emit sendMessage({DISCARD, QString::number(order) + "," + cards.join(',')});
     emit cardsUpdated();
-    if (myCards.empty()) cout << "You won." << endl;
+    if (myCards.empty()) {
+        emit messageUpdated(order, "你赢了");
+    } else {
+        emit messageUpdated(order, cards.join(' '));
+    }
 }
 
 void GameLogic::pass() {
     emit sendMessage({PASS, QString::number(order)});
+    emit messageUpdated(order, "不要");
 }

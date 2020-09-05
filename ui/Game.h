@@ -39,6 +39,10 @@ private slots:
 
     void checkValidity();
 
+    void refreshMeta();
+
+    void updateMessage(int id, const QString &message);
+
 };
 
 #endif //DOUDIZHU_GAME_H

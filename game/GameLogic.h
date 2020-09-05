@@ -43,6 +43,10 @@ signals:
 
     void cardsEnabled();
 
+    void metaRefreshed();
+
+    void messageUpdated(int id, const QString &message);
+
 public slots:
 
     void onMessage(const Message &message);
