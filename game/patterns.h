@@ -79,6 +79,20 @@ public:
     bool operator<(const QStringList &other) override;
 };
 
+class Plane : public Pattern {
+    QString major;
+
+    int groups;
+
+    int subpattern;
+
+public:
+
+    explicit Plane(const QStringList &other);
+
+    bool operator<(const QStringList &other) override;
+};
+
 template<typename T>
 bool matches(const QStringList &cards);
 

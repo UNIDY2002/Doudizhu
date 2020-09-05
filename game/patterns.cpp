@@ -113,6 +113,52 @@ bool Quartet::operator<(const QStringList &other) {
     return matches<Quartet>(other) && cardCmp(major, (other.count(other[0]) == 2 ? other[4] : other[0]));
 }
 
+template<>
+bool matches<Plane>(const QStringList &cards) {
+    QStringList singles, doubles, triples;
+    for (const auto &card : cards) {
+        switch (cards.count(card)) {
+            case 1:
+                singles.append(card);
+                break;
+            case 2:
+                if (!doubles.contains(card))
+                    doubles.append(card);
+                break;
+            case 3:
+                if (!triples.contains(card))
+                    triples.append(card);
+                break;
+            default:
+                return false;
+        }
+    }
+    if (!singles.isEmpty() && !doubles.isEmpty())
+        return false;
+    if (singles.size() + doubles.size() != triples.size() && singles.size() + doubles.size() != 0)
+        return false;
+    return triples.size() > 1 && cardWeight(triples[triples.size() - 1]) - cardWeight(triples[0]) == triples.size() - 1;
+}
+
+Plane::Plane(const QStringList &other) {
+    QStringList triples;
+    for (const auto &card : other)
+        if (other.count(card) == 3 && !triples.contains(card))
+            triples.append(card);
+    major = triples[0];
+    groups = triples.size();
+    subpattern = other.size() / groups;
+}
+
+bool Plane::operator<(const QStringList &other) {
+    if (matches<Plane>(other)) {
+        Plane pattern = Plane(other);
+        return cardCmp(major, pattern.major) && groups == pattern.groups && subpattern == pattern.subpattern;
+    } else {
+        return false;
+    }
+}
+
 /* Factory */
 
 Pattern *makePattern(const QStringList &cards) {
@@ -128,6 +174,8 @@ Pattern *makePattern(const QStringList &cards) {
         return new DoubleStraight(cards);
     } else if (matches<Quartet>(cards)) {
         return new Quartet(cards);
+    } else if (matches<Plane>(cards)) {
+        return new Plane(cards);
     } else {
         return nullptr;
     }
