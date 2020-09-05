@@ -18,6 +18,8 @@ Q_OBJECT
 
     int lastDiscardId = -1;
 
+    int otherNumber[3]{17, 17, 17};
+
     QStringList lastDiscards{};
 
     QStringList cardPile;

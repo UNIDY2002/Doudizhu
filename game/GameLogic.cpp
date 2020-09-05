@@ -5,7 +5,7 @@ GameLogic::GameLogic(int order, const QStringList &cards, QObject *parent) :
         QObject(parent), order(order), cardPile(cards),
         myCards(cards.begin() + (order * 17), cards.begin() + ((order + 1) * 17)) {
     std::sort(myCards.begin(), myCards.end(), &cardCmp);
-    cout << "I am " << order << endl;
+    cout << "You are " << order << endl;
 }
 
 GameLogic::~GameLogic() = default;
@@ -41,6 +41,10 @@ void GameLogic::onMessage(const Message &message) {
             if ((lastDiscardId + 1) % 3 == order) {
                 emit cardsEnabled();
             }
+            otherNumber[lastDiscardId] -= lastDiscards.size();
+            if (otherNumber[lastDiscardId] <= 0) {
+                cout << lastDiscardId << " won." << endl;
+            }
         }
         case PASS: {
             if ((message.payload.toInt() + 1) % 3 == order) {
@@ -72,7 +76,7 @@ void GameLogic::processButtons(QPushButton *positive, QPushButton *negative) {
 void GameLogic::setLandlord() {
     auto state = (callingStatus[1] + 1) + (callingStatus[2] + 1) / 2;
     int landlord[4]{0, 2, 1, 2};
-    lastDiscardId = landlordId = landlord[state];
+    otherNumber[lastDiscardId = landlordId = landlord[state]] = 20;
     cout << "Landlord: " << landlordId << endl;
     if (landlordId == order) {
         myCards.append(cardPile[51]);
@@ -100,7 +104,10 @@ void GameLogic::call(bool choice) {
 
 void GameLogic::discard(const QStringList &cards) {
     lastDiscardId = order;
+    for (const auto &card : cards) myCards.removeOne(card);
     emit sendMessage({DISCARD, QString::number(order) + "," + cards.join(',')});
+    emit cardsUpdated();
+    if (myCards.empty()) cout << "You won." << endl;
 }
 
 void GameLogic::pass() {
