@@ -22,9 +22,13 @@ public:
 
     ~DecentralizedServer() override;
 
+    QPair<int, QStringList> sendInitMessages();
+
     void afterLinking() override;
 
     void prepare(GameLogic *logic) override;
+
+    void unlink();
 
 };
 

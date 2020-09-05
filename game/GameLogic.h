@@ -57,6 +57,8 @@ signals:
 
     void hotswap();
 
+    void hotswapWithInitParams(int order, const QStringList &cards);
+
 public slots:
 
     void onMessage(const Message &message);

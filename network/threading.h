@@ -22,15 +22,17 @@ public:
 
 class WaitForReadyReadThread : public QThread {
 
+    DecentralizedClient *policy;
+
     QTcpSocket *socket;
 
     GameLogic *logic;
 
 protected:
-    [[noreturn]] void run() override;
+    void run() override;
 
 public:
-    WaitForReadyReadThread(QObject *parent, QTcpSocket *socket, GameLogic *logic);
+    WaitForReadyReadThread(DecentralizedClient *parent, QTcpSocket *socket, GameLogic *logic);
 
     ~WaitForReadyReadThread() override;
 };

@@ -77,6 +77,8 @@ void GameLogic::processButtons(QPushButton *positive, QPushButton *negative) {
     negative->setText(someoneCalled ? "不抢" : "不叫");
     positive->setEnabled(true);
     negative->setEnabled(true);
+    positive->disconnect();
+    negative->disconnect();
     connect(positive, &QPushButton::clicked, [=]() {
         call(true);
         positive->setEnabled(false);

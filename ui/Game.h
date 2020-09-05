@@ -24,6 +24,8 @@ class Game : public QWidget {
 
     bool readyToQuit = false;
 
+    void init(GameLogic *gameLogic);
+
 protected:
     void closeEvent(QCloseEvent *event) override;
 
@@ -53,6 +55,8 @@ private slots:
     void onForceExit();
 
     void onHotswap();
+
+    void onHotswapWithInitParams(int order, const QStringList &cards);
 
 };
 

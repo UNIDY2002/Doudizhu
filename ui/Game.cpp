@@ -1,5 +1,7 @@
 #include <QtWidgets/QMessageBox>
 #include <QCloseEvent>
+#include <network/DecentralizedServer.h>
+#include <network/DecentralizedClient.h>
 #include "Game.h"
 
 Game::Game(NetworkPolicy *policy, int order, const QStringList &cards, QWidget *parent) :
@@ -13,59 +15,98 @@ Game::Game(NetworkPolicy *policy, int order, const QStringList &cards, QWidget *
         cardButton->setCheckable(true);
         connect(cardButton, &QPushButton::clicked, this, &Game::checkValidity);
     }
-    updateCards();
-    policy->prepare(logic);
-    connect(logic, &GameLogic::callingStatusUpdated, this, &Game::updateCallingStatus);
-    connect(logic, &GameLogic::cardsUpdated, this, &Game::updateCards);
-    connect(logic, &GameLogic::cardsEnabled, this, &Game::enableCards);
-    connect(logic, &GameLogic::metaRefreshed, this, &Game::refreshMeta);
-    connect(logic, &GameLogic::messageUpdated, this, &Game::updateMessage);
-    connect(logic, &GameLogic::buttonsReset, this, &Game::resetButtons);
-    connect(logic, &GameLogic::gameStops, this, &Game::onGameStops);
-    connect(logic, &GameLogic::forceExit, this, &Game::onForceExit);
-    connect(logic, &GameLogic::hotswap, this, &Game::onHotswap);
-
-    connect(ui->positiveAction, &QPushButton::clicked, [=]() {
-        resetButtons();
-        logic->discard(pickedCardsCache);
-    });
-
-    connect(ui->negativeAction, &QPushButton::clicked, [=]() {
-        resetButtons();
-        logic->pass();
-    });
-
-    // To be refactored...
-    switch (order) {
-        case 0:
-            ui->status0->hide();
-            ui->positive1->hide();
-            ui->negative1->hide();
-            ui->positive2->hide();
-            ui->negative2->hide();
-            logic->processButtons(ui->positive0, ui->negative0);
-            break;
-        case 1:
-            ui->status1->hide();
-            ui->positive0->hide();
-            ui->negative0->hide();
-            ui->positive2->hide();
-            ui->negative2->hide();
-            break;
-        case 2:
-            ui->status2->hide();
-            ui->positive0->hide();
-            ui->negative0->hide();
-            ui->positive1->hide();
-            ui->negative1->hide();
-            break;
-        default:
-            break;
-    }
+    init(logic);
 }
 
 Game::~Game() {
     delete ui;
+}
+
+void Game::init(GameLogic *gameLogic) {
+    updateCards();
+    policy->prepare(gameLogic);
+    connect(gameLogic, &GameLogic::callingStatusUpdated, this, &Game::updateCallingStatus);
+    connect(gameLogic, &GameLogic::cardsUpdated, this, &Game::updateCards);
+    connect(gameLogic, &GameLogic::cardsEnabled, this, &Game::enableCards);
+    connect(gameLogic, &GameLogic::metaRefreshed, this, &Game::refreshMeta);
+    connect(gameLogic, &GameLogic::messageUpdated, this, &Game::updateMessage);
+    connect(gameLogic, &GameLogic::buttonsReset, this, &Game::resetButtons);
+    connect(gameLogic, &GameLogic::gameStops, this, &Game::onGameStops);
+    connect(gameLogic, &GameLogic::forceExit, this, &Game::onForceExit);
+    connect(gameLogic, &GameLogic::hotswap, this, &Game::onHotswap);
+    connect(gameLogic, &GameLogic::hotswapWithInitParams, this, &Game::onHotswapWithInitParams);
+
+    connect(ui->positiveAction, &QPushButton::clicked, [=]() {
+        resetButtons();
+        gameLogic->discard(pickedCardsCache);
+    });
+
+    connect(ui->negativeAction, &QPushButton::clicked, [=]() {
+        resetButtons();
+        gameLogic->pass();
+    });
+
+    // To be refactored...
+    switch (gameLogic->order) {
+        case 0:
+            ui->status0->hide();
+            ui->positive0->show();
+            ui->negative0->show();
+            ui->status1->show();
+            ui->positive1->hide();
+            ui->negative1->hide();
+            ui->status2->show();
+            ui->positive2->hide();
+            ui->negative2->hide();
+            ui->positive0->setText("?");
+            ui->negative0->setText("?");
+            ui->status1->setText("?");
+            ui->status2->setText("?");
+            gameLogic->processButtons(ui->positive0, ui->negative0);
+            break;
+        case 1:
+            ui->status0->show();
+            ui->positive0->hide();
+            ui->negative0->hide();
+            ui->status1->hide();
+            ui->positive1->show();
+            ui->negative1->show();
+            ui->status2->show();
+            ui->positive2->hide();
+            ui->negative2->hide();
+            ui->positive1->setText("?");
+            ui->negative1->setText("?");
+            ui->status0->setText("?");
+            ui->status2->setText("?");
+            break;
+        case 2:
+            ui->status0->show();
+            ui->positive0->hide();
+            ui->negative0->hide();
+            ui->status1->show();
+            ui->positive1->hide();
+            ui->negative1->hide();
+            ui->status2->hide();
+            ui->positive2->show();
+            ui->negative2->show();
+            ui->positive2->setText("?");
+            ui->negative2->setText("?");
+            ui->status0->setText("?");
+            ui->status1->setText("?");
+            break;
+        default:
+            break;
+    }
+
+    ui->positiveAction->setText("出牌");
+    ui->negativeAction->setText("不要");
+
+    ui->upper->clear();
+    ui->lower->clear();
+    ui->dipai->clear();
+    ui->upperMessage->clear();
+    ui->lowerMessage->clear();
+    ui->myMessage->clear();
 }
 
 void Game::closeEvent(QCloseEvent *event) {
@@ -173,5 +214,17 @@ void Game::onForceExit() {
 }
 
 void Game::onHotswap() {
-    cout << "Prepare to hotswap." << endl;
+    if (auto decentralizedServer = dynamic_cast<DecentralizedServer *>(policy)) {
+        decentralizedServer->unlink();
+        delete logic;
+        auto initData = decentralizedServer->sendInitMessages();
+        init(logic = new GameLogic(initData.first, initData.second));
+    }
+}
+
+void Game::onHotswapWithInitParams(int order, const QStringList &cards) {
+    if (dynamic_cast<DecentralizedClient *>(policy)) {
+        delete logic;
+        init(logic = new GameLogic(order, cards));
+    }
 }

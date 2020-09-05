@@ -18,6 +18,8 @@ public:
     /* possibly blocking method */
     void waitForGameStarts();
 
+    bool processGameStartsMessage(const Message &message, GameLogic* logicForHotswap = nullptr);
+
     void prepare(GameLogic *logic) override;
 
 };

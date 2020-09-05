@@ -31,18 +31,23 @@ void WaitForConnectionThread::run() {
     }
 }
 
-WaitForReadyReadThread::WaitForReadyReadThread(QObject *parent, QTcpSocket *socket, GameLogic *logic) :
-        QThread(parent), socket(socket), logic(logic) {}
+WaitForReadyReadThread::WaitForReadyReadThread(DecentralizedClient *parent, QTcpSocket *socket, GameLogic *logic) :
+        QThread(parent), policy(parent), socket(socket), logic(logic) {}
 
 WaitForReadyReadThread::~WaitForReadyReadThread() = default;
 
 // TODO: why isn't readyRead signal available?
-[[noreturn]] void WaitForReadyReadThread::run() {
+void WaitForReadyReadThread::run() {
     while (true) {
         if (socket->waitForReadyRead()) {
             Message message;
             while ((message = read(socket)).type) {
-                logic->onMessage(message);
+                if (message.type == GAME_STARTS) {
+                    policy->processGameStartsMessage(message, logic);
+                    return;
+                } else {
+                    logic->onMessage(message);
+                }
             }
         }
     }
