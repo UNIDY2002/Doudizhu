@@ -33,6 +33,52 @@ public:
     bool operator<(const QStringList &other) override;
 };
 
+class Triple : public Pattern {
+    QString major;
+
+    int subpattern;
+
+public:
+
+    explicit Triple(const QStringList &other);
+
+    bool operator<(const QStringList &other) override;
+};
+
+class Straight : public Pattern {
+    QString major;
+
+    int length;
+
+public:
+
+    explicit Straight(const QStringList &other);
+
+    bool operator<(const QStringList &other) override;
+};
+
+class DoubleStraight : public Pattern {
+    QString major;
+
+    int pairs;
+
+public:
+
+    explicit DoubleStraight(const QStringList &other);
+
+    bool operator<(const QStringList &other) override;
+};
+
+class Quartet : public Pattern {
+    QString major;
+
+public:
+
+    explicit Quartet(const QStringList &other);
+
+    bool operator<(const QStringList &other) override;
+};
+
 template<typename T>
 bool matches(const QStringList &cards);
 
