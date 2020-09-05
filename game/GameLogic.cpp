@@ -1,3 +1,5 @@
+#include <QApplication>
+#include <QtWidgets/QMessageBox>
 #include "GameLogic.h"
 #include "utils.h"
 
@@ -42,6 +44,7 @@ void GameLogic::onMessage(const Message &message) {
             if (otherNumber[lastDiscardId] <= 0) {
                 cout << lastDiscardId << " won." << endl;
                 emit messageUpdated(order, lastDiscardId == landlordId ? "地主胜利" : "农民胜利");
+                emit gameStops();
             } else if ((lastDiscardId + 1) % 3 == order) {
                 emit cardsEnabled();
             }
@@ -53,6 +56,15 @@ void GameLogic::onMessage(const Message &message) {
             auto id = message.payload.toInt();
             if ((id + 1) % 3 == order) emit cardsEnabled();
             emit messageUpdated(id, "不要");
+            break;
+        }
+        case RESTART: {
+            if (++restartCnt == 3) emit hotswap();
+            break;
+        }
+        case QUIT: {
+            emit messageUpdated(order, "有玩家退出，游戏结束");
+            emit buttonsReset();
             break;
         }
         default:
@@ -114,6 +126,7 @@ void GameLogic::discard(const QStringList &cards) {
     emit cardsUpdated();
     if (myCards.empty()) {
         emit messageUpdated(order, "你赢了");
+        emit gameStops();
     } else {
         emit messageUpdated(order, cards.join(' '));
     }
@@ -122,4 +135,15 @@ void GameLogic::discard(const QStringList &cards) {
 void GameLogic::pass() {
     emit sendMessage({PASS, QString::number(order)});
     emit messageUpdated(order, "不要");
+}
+
+void GameLogic::restart() {
+    emit sendMessage({RESTART});
+    emit buttonsReset();
+    if (++restartCnt == 3) emit hotswap();
+}
+
+void GameLogic::quit() {
+    emit sendMessage({QUIT});
+    emit forceExit();
 }

@@ -22,6 +22,11 @@ class Game : public QWidget {
 
     QStringList pickedCardsCache{};
 
+    bool readyToQuit = false;
+
+protected:
+    void closeEvent(QCloseEvent *event) override;
+
 public:
     explicit Game(NetworkPolicy *policy, int order, const QStringList &cards, QWidget *parent = nullptr);
 
@@ -42,6 +47,12 @@ private slots:
     void refreshMeta();
 
     void updateMessage(int id, const QString &message);
+
+    void onGameStops();
+
+    void onForceExit();
+
+    void onHotswap();
 
 };
 

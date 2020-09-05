@@ -18,6 +18,8 @@ enum Type {
     NOT_CALL,
     DISCARD,
     PASS,
+    RESTART,
+    QUIT,
 };
 
 struct Message {

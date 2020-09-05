@@ -20,6 +20,8 @@ Q_OBJECT
 
     int otherNumber[3]{17, 17, 17};
 
+    int restartCnt = 0;
+
     QStringList lastDiscards{};
 
     QStringList cardPile;
@@ -47,6 +49,14 @@ signals:
 
     void messageUpdated(int id, const QString &message);
 
+    void gameStops();
+
+    void forceExit();
+
+    void buttonsReset();
+
+    void hotswap();
+
 public slots:
 
     void onMessage(const Message &message);
@@ -62,6 +72,10 @@ private:
     void discard(const QStringList &cards);
 
     void pass();
+
+    void restart();
+
+    void quit();
 
 };
 

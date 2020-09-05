@@ -1,3 +1,5 @@
+#include <QtWidgets/QMessageBox>
+#include <QCloseEvent>
 #include "Game.h"
 
 Game::Game(NetworkPolicy *policy, int order, const QStringList &cards, QWidget *parent) :
@@ -18,15 +20,19 @@ Game::Game(NetworkPolicy *policy, int order, const QStringList &cards, QWidget *
     connect(logic, &GameLogic::cardsEnabled, this, &Game::enableCards);
     connect(logic, &GameLogic::metaRefreshed, this, &Game::refreshMeta);
     connect(logic, &GameLogic::messageUpdated, this, &Game::updateMessage);
+    connect(logic, &GameLogic::buttonsReset, this, &Game::resetButtons);
+    connect(logic, &GameLogic::gameStops, this, &Game::onGameStops);
+    connect(logic, &GameLogic::forceExit, this, &Game::onForceExit);
+    connect(logic, &GameLogic::hotswap, this, &Game::onHotswap);
 
     connect(ui->positiveAction, &QPushButton::clicked, [=]() {
-        logic->discard(pickedCardsCache);
         resetButtons();
+        logic->discard(pickedCardsCache);
     });
 
     connect(ui->negativeAction, &QPushButton::clicked, [=]() {
-        logic->pass();
         resetButtons();
+        logic->pass();
     });
 
     // To be refactored...
@@ -60,6 +66,14 @@ Game::Game(NetworkPolicy *policy, int order, const QStringList &cards, QWidget *
 
 Game::~Game() {
     delete ui;
+}
+
+void Game::closeEvent(QCloseEvent *event) {
+    if (!readyToQuit && QMessageBox::information(this, "确认", "您真的要退出吗？", "确认", "取消")) {
+        event->ignore();
+    } else {
+        event->accept();
+    }
 }
 
 void Game::updateCards() {
@@ -140,4 +154,24 @@ void Game::refreshMeta() {
 void Game::updateMessage(int id, const QString &message) {
     (id == logic->order ? ui->myMessage : id == (logic->order + 1) % 3 ? ui->lowerMessage : ui->upperMessage)
             ->setText(message);
+}
+
+void Game::onGameStops() {
+    ui->negativeAction->setText("退出游戏");
+    ui->positiveAction->setText("再来一局");
+    ui->positiveAction->disconnect();
+    ui->negativeAction->disconnect();
+    ui->positiveAction->setEnabled(true);
+    ui->negativeAction->setEnabled(true);
+    connect(ui->positiveAction, &QPushButton::clicked, logic, &GameLogic::restart);
+    connect(ui->negativeAction, &QPushButton::clicked, logic, &GameLogic::quit);
+}
+
+void Game::onForceExit() {
+    readyToQuit = true;
+    QApplication::closeAllWindows();
+}
+
+void Game::onHotswap() {
+    cout << "Prepare to hotswap." << endl;
 }
