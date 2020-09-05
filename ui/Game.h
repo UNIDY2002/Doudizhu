@@ -18,6 +18,10 @@ class Game : public QWidget {
 
     Ui::Game *ui;
 
+    QPushButton *cardButtons[20]{};
+
+    QStringList pickedCardsCache{};
+
 public:
     explicit Game(NetworkPolicy *policy, int order, const QStringList &cards, QWidget *parent = nullptr);
 
@@ -27,7 +31,11 @@ private slots:
 
     void updateCards();
 
+    void enableCards();
+
     void updateCallingStatus(int id, bool call, bool someoneCalled, int myOrder);
+
+    void checkValidity();
 
 };
 

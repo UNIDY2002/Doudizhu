@@ -27,6 +27,21 @@ void GameLogic::onMessage(const Message &message) {
             emit callingStatusUpdated(id, false, someoneCalled, order);
             break;
         }
+        case DISCARD: {
+            auto bytes = QByteArray();
+            bytes.append(message.payload);
+            auto segments = bytes.split(',');
+            if (segments.size() < 2) break;
+            lastDiscardId = segments[0].toInt();
+            segments.pop_front();
+            lastDiscards = QStringList();
+            for (const auto &segment: segments) {
+                lastDiscards.append(segment);
+            }
+            if ((lastDiscardId + 1) % 3 == order) {
+                emit cardsEnabled();
+            }
+        }
         default:
             break;
     }
@@ -52,13 +67,15 @@ void GameLogic::processButtons(QPushButton *positive, QPushButton *negative) {
 void GameLogic::setLandlord() {
     auto state = (callingStatus[1] + 1) + (callingStatus[2] + 1) / 2;
     int landlord[4]{0, 2, 1, 2};
-    cout << "Landlord: " << landlord[state] << endl;
-    if (landlord[state] == order) {
+    lastDiscardId = landlordId = landlord[state];
+    cout << "Landlord: " << landlordId << endl;
+    if (landlordId == order) {
         myCards.append(cardPile[51]);
         myCards.append(cardPile[52]);
         myCards.append(cardPile[53]);
         std::sort(myCards.begin(), myCards.end(), &cardCmp);
         emit cardsUpdated();
+        emit cardsEnabled();
     }
 }
 
@@ -74,4 +91,8 @@ void GameLogic::call(bool choice) {
     if (order == 2) {
         setLandlord();
     }
+}
+
+void GameLogic::discard(const QStringList &cards) {
+    emit sendMessage({DISCARD, QString::number(order) + "," + cards.join(',')});
 }

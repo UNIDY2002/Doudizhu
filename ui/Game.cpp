@@ -3,10 +3,28 @@
 Game::Game(NetworkPolicy *policy, int order, const QStringList &cards, QWidget *parent) :
         QWidget(parent), policy(policy), logic(new GameLogic(order, cards)), ui(new Ui::Game) {
     ui->setupUi(this);
+    for (auto &cardButton : cardButtons) {
+        ui->cardContainer->addWidget(cardButton = new QPushButton(this));
+        cardButton->setMaximumWidth(50);
+        cardButton->setEnabled(false);
+        cardButton->hide();
+        cardButton->setCheckable(true);
+        connect(cardButton, &QPushButton::clicked, this, &Game::checkValidity);
+    }
     updateCards();
     policy->prepare(logic);
     connect(logic, &GameLogic::callingStatusUpdated, this, &Game::updateCallingStatus);
     connect(logic, &GameLogic::cardsUpdated, this, &Game::updateCards);
+    connect(logic, &GameLogic::cardsEnabled, this, &Game::enableCards);
+
+    connect(ui->positiveAction, &QPushButton::clicked, [=]() {
+        logic->discard(pickedCardsCache);
+        ui->positiveAction->setEnabled(false);
+        for (const auto &cardButton : cardButtons) {
+            cardButton->setEnabled(false);
+            cardButton->setChecked(false);
+        }
+    });
 
     // To be refactored...
     switch (order) {
@@ -42,7 +60,19 @@ Game::~Game() {
 }
 
 void Game::updateCards() {
-    ui->cards->setText(logic->myCards.join(' '));
+    for (int i = 0; i < logic->myCards.size(); ++i) {
+        cardButtons[i]->setText(logic->myCards[i]);
+        cardButtons[i]->show();
+    }
+    for (int i = logic->myCards.size(); i < 20; ++i) {
+        cardButtons[i]->hide();
+    }
+}
+
+void Game::enableCards() {
+    for (const auto &cardButton : cardButtons) {
+        cardButton->setEnabled(true);
+    }
 }
 
 void Game::updateCallingStatus(int id, bool call, bool someoneCalled, int myOrder) {
@@ -69,4 +99,15 @@ void Game::updateCallingStatus(int id, bool call, bool someoneCalled, int myOrde
     } else if (id == 2) {
         logic->setLandlord();
     }
+}
+
+void Game::checkValidity() {
+    pickedCardsCache.clear();
+    for (int i = 0; i < logic->myCards.size(); ++i) {
+        if (cardButtons[i]->isChecked()) {
+            pickedCardsCache.append(logic->myCards[i]);
+        }
+    }
+
+    ui->positiveAction->setEnabled(!pickedCardsCache.isEmpty());
 }

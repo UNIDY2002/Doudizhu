@@ -145,18 +145,31 @@
     </spacer>
    </item>
    <item>
-    <layout class="QHBoxLayout" name="cardContainer">
+    <layout class="QHBoxLayout" name="actionContainer">
      <item>
-      <widget class="QLabel" name="cards">
-       <property name="text">
-        <string>TextLabel</string>
+      <widget class="QPushButton" name="negativeAction">
+       <property name="enabled">
+        <bool>false</bool>
        </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
+       <property name="text">
+        <string>不要</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="positiveAction">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="text">
+        <string>出牌</string>
        </property>
       </widget>
      </item>
     </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="cardContainer"/>
    </item>
   </layout>
  </widget>

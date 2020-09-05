@@ -16,6 +16,8 @@ enum Type {
     GAME_STARTS,
     CALL,
     NOT_CALL,
+    DISCARD,
+    PASS,
 };
 
 struct Message {

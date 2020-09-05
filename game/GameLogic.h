@@ -14,6 +14,12 @@ Q_OBJECT
 
     int callingStatus[3]{}; // 1: positive; -1: negative
 
+    int landlordId = -1;
+
+    int lastDiscardId = -1;
+
+    QStringList lastDiscards{};
+
     QStringList cardPile;
 
     QStringList myCards;
@@ -33,6 +39,8 @@ signals:
 
     void cardsUpdated();
 
+    void cardsEnabled();
+
 public slots:
 
     void onMessage(const Message &message);
@@ -43,9 +51,9 @@ private:
 
     void setLandlord();
 
-private slots:
-
     void call(bool choice);
+
+    void discard(const QStringList &cards);
 
 };
 
