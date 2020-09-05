@@ -93,6 +93,16 @@ public:
     bool operator<(const QStringList &other) override;
 };
 
+class Bomb : public Pattern {
+    QString card;
+
+public:
+
+    explicit Bomb(const QStringList &other);
+
+    bool operator<(const QStringList &other) override;
+};
+
 template<typename T>
 bool matches(const QStringList &cards);
 
