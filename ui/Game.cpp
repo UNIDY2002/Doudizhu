@@ -2,6 +2,8 @@
 #include <QCloseEvent>
 #include <network/DecentralizedServer.h>
 #include <network/DecentralizedClient.h>
+#include <game/patterns.h>
+#include <game/utils.h>
 #include "Game.h"
 
 Game::Game(NetworkPolicy *policy, int order, const QStringList &cards, QWidget *parent) :
@@ -9,7 +11,7 @@ Game::Game(NetworkPolicy *policy, int order, const QStringList &cards, QWidget *
     ui->setupUi(this);
     for (auto &cardButton : cardButtons) {
         ui->cardContainer->addWidget(cardButton = new QPushButton(this));
-        cardButton->setMaximumWidth(50);
+        cardButton->setMaximumWidth(40);
         cardButton->setEnabled(false);
         cardButton->hide();
         cardButton->setCheckable(true);
@@ -179,7 +181,17 @@ void Game::checkValidity() {
         }
     }
 
-    ui->positiveAction->setEnabled(!pickedCardsCache.isEmpty());
+    std::sort(pickedCardsCache.begin(), pickedCardsCache.end(), cardCmp);
+
+    if (logic->lastDiscardId == logic->order) {
+        ui->positiveAction->setEnabled(makePattern(pickedCardsCache));
+    } else {
+        if (auto lastPattern = makePattern(logic->lastDiscards)) {
+            ui->positiveAction->setEnabled(*lastPattern < pickedCardsCache);
+        } else {
+            ui->positiveAction->setEnabled(false);
+        }
+    }
 }
 
 void Game::refreshMeta() {

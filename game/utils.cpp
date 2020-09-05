@@ -55,8 +55,8 @@ QStringList genCards() {
     result.push_back("K");
     result.push_back("K");
     result.push_back("K");
-    result.push_back("Joker");
-    result.push_back("Joker");
+    result.push_back("X");
+    result.push_back("Y");
     return result;
 }
 
@@ -82,6 +82,10 @@ int cardWeight(const QString &c) {
             return 11;
         case '2':
             return 12;
+        case 'X':
+            return 13;
+        case 'Y':
+            return 14;
         default:
             return -1;
     }
