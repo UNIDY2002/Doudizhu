@@ -184,10 +184,13 @@ void Game::checkValidity() {
     std::sort(pickedCardsCache.begin(), pickedCardsCache.end(), cardCmp);
 
     if (logic->lastDiscardId == logic->order) {
-        ui->positiveAction->setEnabled(makePattern(pickedCardsCache));
+        auto pattern = makePattern(pickedCardsCache);
+        ui->positiveAction->setEnabled(pattern);
+        delete pattern;
     } else {
         if (auto lastPattern = makePattern(logic->lastDiscards)) {
             ui->positiveAction->setEnabled(*lastPattern < pickedCardsCache);
+            delete lastPattern;
         } else {
             ui->positiveAction->setEnabled(false);
         }
