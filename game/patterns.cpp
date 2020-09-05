@@ -3,6 +3,15 @@
 
 Pattern::~Pattern() = default;
 
+/* JokerBomb */
+
+template<>
+bool matches<JokerBomb>(const QStringList &cards) {
+    return cards.size() == 2 && cards[0] == "X" && cards[1] == "Y";
+}
+
+bool JokerBomb::operator<(const QStringList &other) { return false; }
+
 /* Bomb */
 
 template<>
@@ -13,7 +22,7 @@ bool matches<Bomb>(const QStringList &cards) {
 Bomb::Bomb(const QStringList &other) : card(other[0]) {}
 
 bool Bomb::operator<(const QStringList &other) {
-    return matches<Bomb>(other) && cardCmp(card, other[0]);
+    return matches<JokerBomb>(other) || matches<Bomb>(other) && cardCmp(card, other[0]);
 }
 
 /* Single */
@@ -24,7 +33,7 @@ bool matches<Single>(const QStringList &cards) { return cards.size() == 1; }
 Single::Single(const QStringList &other) : card(other[0]) {}
 
 bool Single::operator<(const QStringList &other) {
-    return matches<Bomb>(other) || matches<Single>(other) && cardCmp(card, other[0]);
+    return matches<JokerBomb>(other) || matches<Bomb>(other) || matches<Single>(other) && cardCmp(card, other[0]);
 }
 
 /* Pair */
@@ -35,7 +44,7 @@ bool matches<Pair>(const QStringList &cards) { return cards.size() == 2 && cards
 Pair::Pair(const QStringList &other) : card(other[0]) {}
 
 bool Pair::operator<(const QStringList &other) {
-    return matches<Bomb>(other) || matches<Pair>(other) && cardCmp(card, other[0]);
+    return matches<JokerBomb>(other) || matches<Bomb>(other) || matches<Pair>(other) && cardCmp(card, other[0]);
 }
 
 /* Triple */
@@ -58,7 +67,8 @@ bool matches<Triple>(const QStringList &cards) {
 Triple::Triple(const QStringList &other) : major(other[2]), subpattern(other.size()) {}
 
 bool Triple::operator<(const QStringList &other) {
-    return matches<Bomb>(other) || matches<Triple>(other) && subpattern == other.size() && cardCmp(major, other[2]);
+    return matches<JokerBomb>(other) || matches<Bomb>(other) ||
+           matches<Triple>(other) && subpattern == other.size() && cardCmp(major, other[2]);
 }
 
 /* Straight */
@@ -78,7 +88,8 @@ bool matches<Straight>(const QStringList &cards) {
 Straight::Straight(const QStringList &other) : major(other[0]), length(other.size()) {}
 
 bool Straight::operator<(const QStringList &other) {
-    return matches<Bomb>(other) || matches<Straight>(other) && length == other.size() && cardCmp(major, other[0]);
+    return matches<JokerBomb>(other) || matches<Bomb>(other) ||
+           matches<Straight>(other) && length == other.size() && cardCmp(major, other[0]);
 }
 
 /* DoubleStraight */
@@ -101,7 +112,7 @@ bool matches<DoubleStraight>(const QStringList &cards) {
 DoubleStraight::DoubleStraight(const QStringList &other) : major(other[0]), pairs(other.size() / 2) {}
 
 bool DoubleStraight::operator<(const QStringList &other) {
-    return matches<Bomb>(other) ||
+    return matches<JokerBomb>(other) || matches<Bomb>(other) ||
            matches<DoubleStraight>(other) && pairs == other.size() / 2 && cardCmp(major, other[0]);
 }
 
@@ -124,7 +135,7 @@ bool matches<Quartet>(const QStringList &cards) {
 Quartet::Quartet(const QStringList &other) : major(other.count(other[0]) == 2 ? other[4] : other[0]) {}
 
 bool Quartet::operator<(const QStringList &other) {
-    return matches<Bomb>(other) ||
+    return matches<JokerBomb>(other) || matches<Bomb>(other) ||
            matches<Quartet>(other) && cardCmp(major, (other.count(other[0]) == 2 ? other[4] : other[0]));
 }
 
@@ -168,7 +179,7 @@ Plane::Plane(const QStringList &other) {
 }
 
 bool Plane::operator<(const QStringList &other) {
-    if (matches<Bomb>(other)) {
+    if (matches<JokerBomb>(other) || matches<Bomb>(other)) {
         return true;
     } else if (matches<Plane>(other)) {
         Plane pattern = Plane(other);
@@ -197,6 +208,8 @@ Pattern *makePattern(const QStringList &cards) {
         return new Plane(cards);
     } else if (matches<Bomb>(cards)) {
         return new Bomb(cards);
+    } else if (matches<JokerBomb>(cards)) {
+        return new JokerBomb();
     } else {
         return nullptr;
     }

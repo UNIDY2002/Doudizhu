@@ -103,6 +103,11 @@ public:
     bool operator<(const QStringList &other) override;
 };
 
+class JokerBomb : public Pattern {
+public:
+    bool operator<(const QStringList &other) override;
+};
+
 template<typename T>
 bool matches(const QStringList &cards);
 
