@@ -19,11 +19,12 @@ Game::Game(NetworkPolicy *policy, int order, const QStringList &cards, QWidget *
 
     connect(ui->positiveAction, &QPushButton::clicked, [=]() {
         logic->discard(pickedCardsCache);
-        ui->positiveAction->setEnabled(false);
-        for (const auto &cardButton : cardButtons) {
-            cardButton->setEnabled(false);
-            cardButton->setChecked(false);
-        }
+        resetButtons();
+    });
+
+    connect(ui->negativeAction, &QPushButton::clicked, [=]() {
+        logic->pass();
+        resetButtons();
     });
 
     // To be refactored...
@@ -70,8 +71,19 @@ void Game::updateCards() {
 }
 
 void Game::enableCards() {
+    if (logic->lastDiscardId != logic->order)
+        ui->negativeAction->setEnabled(true);
     for (const auto &cardButton : cardButtons) {
         cardButton->setEnabled(true);
+    }
+}
+
+void Game::resetButtons() {
+    ui->negativeAction->setEnabled(false);
+    ui->positiveAction->setEnabled(false);
+    for (const auto &cardButton : cardButtons) {
+        cardButton->setEnabled(false);
+        cardButton->setChecked(false);
     }
 }
 

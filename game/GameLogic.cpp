@@ -42,6 +42,11 @@ void GameLogic::onMessage(const Message &message) {
                 emit cardsEnabled();
             }
         }
+        case PASS: {
+            if ((message.payload.toInt() + 1) % 3 == order) {
+                emit cardsEnabled();
+            }
+        }
         default:
             break;
     }
@@ -94,5 +99,10 @@ void GameLogic::call(bool choice) {
 }
 
 void GameLogic::discard(const QStringList &cards) {
+    lastDiscardId = order;
     emit sendMessage({DISCARD, QString::number(order) + "," + cards.join(',')});
+}
+
+void GameLogic::pass() {
+    emit sendMessage({PASS, QString::number(order)});
 }

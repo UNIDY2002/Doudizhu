@@ -33,6 +33,8 @@ private slots:
 
     void enableCards();
 
+    void resetButtons();
+
     void updateCallingStatus(int id, bool call, bool someoneCalled, int myOrder);
 
     void checkValidity();

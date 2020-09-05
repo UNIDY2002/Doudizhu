@@ -55,6 +55,8 @@ private:
 
     void discard(const QStringList &cards);
 
+    void pass();
+
 };
 
 #endif //DOUDIZHU_GAMELOGIC_H
