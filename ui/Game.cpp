@@ -51,6 +51,7 @@ void Game::init() {
     ui->negativeAction->setText("？");
     ui->positiveAction->show();
     ui->negativeAction->show();
+    ui->subtitle->hide();
     if (logic->order == 0) processCallingButtons();
     updateCards();
 }
@@ -100,8 +101,32 @@ void Game::enableCards() {
     ui->positiveAction->disconnect();
     ui->negativeAction->disconnect();
     connect(ui->positiveAction, &QPushButton::clicked, [=]() {
-        resetButtons();
-        logic->discard(pickedCardsCache);
+        std::sort(pickedCardsCache.begin(), pickedCardsCache.end(), cardCmp);
+
+        if (logic->lastDiscardId == logic->order) {
+            auto pattern = makePattern(pickedCardsCache);
+            if (pattern) {
+                resetButtons();
+                logic->discard(pickedCardsCache);
+                ui->subtitle->hide();
+            } else {
+                ui->subtitle->show();
+            }
+            delete pattern;
+        } else {
+            if (auto lastPattern = makePattern(logic->lastDiscards)) {
+                if (*lastPattern < pickedCardsCache) {
+                    resetButtons();
+                    logic->discard(pickedCardsCache);
+                    ui->subtitle->hide();
+                } else {
+                    ui->subtitle->show();
+                }
+                delete lastPattern;
+            } else {
+                ui->subtitle->show();
+            }
+        }
     });
     connect(ui->negativeAction, &QPushButton::clicked, [=]() {
         resetButtons();
@@ -146,20 +171,8 @@ void Game::checkValidity() {
         if (cardButtons[i]->isChecked())
             pickedCardsCache.append(logic->myCards[i]);
 
-    std::sort(pickedCardsCache.begin(), pickedCardsCache.end(), cardCmp);
-
-    if (logic->lastDiscardId == logic->order) {
-        auto pattern = makePattern(pickedCardsCache);
-        ui->positiveAction->setEnabled(pattern);
-        delete pattern;
-    } else {
-        if (auto lastPattern = makePattern(logic->lastDiscards)) {
-            ui->positiveAction->setEnabled(*lastPattern < pickedCardsCache);
-            delete lastPattern;
-        } else {
-            ui->positiveAction->setEnabled(false);
-        }
-    }
+    ui->subtitle->hide();
+    ui->positiveAction->setEnabled(!pickedCardsCache.isEmpty());
 }
 
 void Game::refreshMeta() {

@@ -52,6 +52,7 @@ void GameLogic::onMessage(const Message &message) {
                 emit cardsEnabled();
             }
             emit metaRefreshed();
+            emit messageUpdated(lastDiscardId, lastDiscards.join(" "));
             emit messageUpdated(order, lastDiscards.join(" "));
             break;
         }
