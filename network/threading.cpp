@@ -1,13 +1,13 @@
 #include "threading.h"
 
 WaitForConnectionThread::WaitForConnectionThread(QObject *parent, QTcpSocket *socket, DecentralizedClient *policy) :
-        QThread(parent), socket(socket), policy(policy) {}
+        QThread(nullptr), socket(socket), policy(policy) {}
 
 WaitForConnectionThread::~WaitForConnectionThread() = default;
 
 void WaitForConnectionThread::run() {
     emit policy->postMessageToWelcome("已发送连接请求");
-    if (socket->waitForConnected() && socket->waitForReadyRead()) {
+    if (socket->waitForConnected() && socket->waitForReadyRead(100)) {
         auto message = read(socket);
         if (message.type == CONFIRM_CONNECTION) {
             bool ok;
@@ -32,14 +32,14 @@ void WaitForConnectionThread::run() {
 }
 
 WaitForReadyReadThread::WaitForReadyReadThread(DecentralizedClient *parent, QTcpSocket *socket, GameLogic *logic) :
-        QThread(parent), policy(parent), socket(socket), logic(logic) {}
+        QThread(nullptr), policy(parent), socket(socket), logic(logic) {}
 
 WaitForReadyReadThread::~WaitForReadyReadThread() = default;
 
 // TODO: why isn't readyRead signal available?
 void WaitForReadyReadThread::run() {
     while (true) {
-        if (socket->waitForReadyRead()) {
+        if (socket->waitForReadyRead(100)) {
             Message message;
             while ((message = read(socket)).type) {
                 if (message.type == GAME_STARTS) {
