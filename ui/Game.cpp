@@ -15,6 +15,8 @@ Game::Game(NetworkPolicy *policy, int order, const QStringList &cards, QWidget *
         cardButton->setEnabled(false);
         cardButton->hide();
         cardButton->setCheckable(true);
+        cardButton->setStyleSheet("QPushButton:hover{background-color:yellow;}"
+                                  "QPushButton:checked{background-color:yellow;}");
         connect(cardButton, &QPushButton::clicked, this, &Game::checkValidity);
     }
     init();
