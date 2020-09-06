@@ -49,6 +49,13 @@
     </layout>
    </item>
    <item>
+    <spacer name="spacer0">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+    </spacer>
+   </item>
+   <item>
     <layout class="QHBoxLayout" name="messages">
      <item>
       <widget class="QLabel" name="upperMessage">
@@ -83,130 +90,7 @@
     </layout>
    </item>
    <item>
-    <spacer name="spacer0">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-    </spacer>
-   </item>
-   <item>
-    <layout class="QHBoxLayout" name="landlordContainer0">
-     <item>
-      <widget class="QPushButton" name="positive0">
-       <property name="enabled">
-        <bool>false</bool>
-       </property>
-       <property name="text">
-        <string>？</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="status0">
-       <property name="text">
-        <string>？</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="negative0">
-       <property name="enabled">
-        <bool>false</bool>
-       </property>
-       <property name="text">
-        <string>？</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </item>
-   <item>
-    <spacer name="spacer1">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-    </spacer>
-   </item>
-   <item>
-    <layout class="QHBoxLayout" name="landlordContainer1">
-     <item>
-      <widget class="QPushButton" name="positive1">
-       <property name="enabled">
-        <bool>false</bool>
-       </property>
-       <property name="text">
-        <string>？</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="status1">
-       <property name="text">
-        <string>？</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="negative1">
-       <property name="enabled">
-        <bool>false</bool>
-       </property>
-       <property name="text">
-        <string>？</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </item>
-   <item>
     <spacer name="spacer2">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-    </spacer>
-   </item>
-   <item>
-    <layout class="QHBoxLayout" name="landlordContainer2">
-     <item>
-      <widget class="QPushButton" name="positive2">
-       <property name="enabled">
-        <bool>false</bool>
-       </property>
-       <property name="text">
-        <string>？</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="status2">
-       <property name="text">
-        <string>？</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="negative2">
-       <property name="enabled">
-        <bool>false</bool>
-       </property>
-       <property name="text">
-        <string>？</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </item>
-   <item>
-    <spacer name="spacer3">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
      </property>

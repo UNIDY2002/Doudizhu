@@ -24,7 +24,9 @@ class Game : public QWidget {
 
     bool readyToQuit = false;
 
-    void init(GameLogic *gameLogic);
+    void init();
+
+    void processCallingButtons();
 
 protected:
     void closeEvent(QCloseEvent *event) override;
@@ -42,7 +44,7 @@ private slots:
 
     void resetButtons();
 
-    void updateCallingStatus(int id, bool call, bool someoneCalled, int myOrder);
+    void updateCallingStatus(int id, bool call, bool someoneCalled);
 
     void checkValidity();
 

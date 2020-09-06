@@ -39,7 +39,7 @@ signals:
 
     void sendMessage(const Message &message);
 
-    void callingStatusUpdated(int id, bool call, bool someoneCalled, int myOrder);
+    void callingStatusUpdated(int id, bool call, bool someoneCalled);
 
     void cardsUpdated();
 
@@ -64,8 +64,6 @@ public slots:
     void onMessage(const Message &message);
 
 private:
-
-    void processButtons(QPushButton *positive, QPushButton *negative);
 
     void setLandlord();
 

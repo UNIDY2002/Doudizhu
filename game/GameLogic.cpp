@@ -20,13 +20,13 @@ void GameLogic::onMessage(const Message &message) {
             auto lastSomeoneCalled = someoneCalled;
             someoneCalled = true;
             callingStatus[id] = 1;
-            emit callingStatusUpdated(id, true, lastSomeoneCalled, order);
+            emit callingStatusUpdated(id, true, lastSomeoneCalled);
             break;
         }
         case NOT_CALL: {
             auto id = message.payload.toInt();
             callingStatus[id] = -1;
-            emit callingStatusUpdated(id, false, someoneCalled, order);
+            emit callingStatusUpdated(id, false, someoneCalled);
             break;
         }
         case DISCARD: {
@@ -70,25 +70,6 @@ void GameLogic::onMessage(const Message &message) {
         default:
             break;
     }
-}
-
-void GameLogic::processButtons(QPushButton *positive, QPushButton *negative) {
-    positive->setText(someoneCalled ? "抢" : "叫");
-    negative->setText(someoneCalled ? "不抢" : "不叫");
-    positive->setEnabled(true);
-    negative->setEnabled(true);
-    positive->disconnect();
-    negative->disconnect();
-    connect(positive, &QPushButton::clicked, [=]() {
-        call(true);
-        positive->setEnabled(false);
-        negative->hide();
-    });
-    connect(negative, &QPushButton::clicked, [=]() {
-        call(false);
-        negative->setEnabled(false);
-        positive->hide();
-    });
 }
 
 void GameLogic::setLandlord() {
