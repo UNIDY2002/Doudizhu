@@ -18,13 +18,25 @@
     <layout class="QHBoxLayout" name="meta">
      <item>
       <widget class="QLabel" name="upper">
+       <property name="font">
+        <font>
+         <family>DengXian</family>
+         <pointsize>16</pointsize>
+        </font>
+       </property>
        <property name="alignment">
-        <set>Qt::AlignLeft</set>
+        <set>Qt::AlignLeading</set>
        </property>
       </widget>
      </item>
      <item>
       <widget class="QLabel" name="dipai">
+       <property name="font">
+        <font>
+         <family>DengXian</family>
+         <pointsize>16</pointsize>
+        </font>
+       </property>
        <property name="alignment">
         <set>Qt::AlignCenter</set>
        </property>
@@ -32,6 +44,12 @@
      </item>
      <item>
       <widget class="QLabel" name="lower">
+       <property name="font">
+        <font>
+         <family>DengXian</family>
+         <pointsize>16</pointsize>
+        </font>
+       </property>
        <property name="alignment">
         <set>Qt::AlignRight</set>
        </property>
@@ -40,7 +58,7 @@
     </layout>
    </item>
    <item>
-    <spacer name="spacer0">
+    <spacer name="spacerX">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
      </property>
@@ -50,13 +68,25 @@
     <layout class="QHBoxLayout" name="messages">
      <item>
       <widget class="QLabel" name="upperMessage">
+       <property name="font">
+        <font>
+         <family>DengXian</family>
+         <pointsize>16</pointsize>
+        </font>
+       </property>
        <property name="alignment">
-        <set>Qt::AlignLeft</set>
+        <set>Qt::AlignLeading</set>
        </property>
       </widget>
      </item>
      <item>
       <widget class="QLabel" name="myMessage">
+       <property name="font">
+        <font>
+         <family>DengXian</family>
+         <pointsize>16</pointsize>
+        </font>
+       </property>
        <property name="alignment">
         <set>Qt::AlignCenter</set>
        </property>
@@ -64,6 +94,12 @@
      </item>
      <item>
       <widget class="QLabel" name="lowerMessage">
+       <property name="font">
+        <font>
+         <family>DengXian</family>
+         <pointsize>16</pointsize>
+        </font>
+       </property>
        <property name="alignment">
         <set>Qt::AlignRight</set>
        </property>
@@ -72,7 +108,7 @@
     </layout>
    </item>
    <item>
-    <spacer name="spacer2">
+    <spacer name="spacerY">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
      </property>
@@ -85,6 +121,12 @@
        <property name="enabled">
         <bool>false</bool>
        </property>
+       <property name="font">
+        <font>
+         <family>DengXian</family>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string>不要</string>
        </property>
@@ -94,6 +136,12 @@
       <widget class="QPushButton" name="positiveAction">
        <property name="enabled">
         <bool>false</bool>
+       </property>
+       <property name="font">
+        <font>
+         <family>DengXian</family>
+         <pointsize>12</pointsize>
+        </font>
        </property>
        <property name="text">
         <string>出牌</string>

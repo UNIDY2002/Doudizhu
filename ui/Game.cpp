@@ -47,6 +47,8 @@ void Game::init() {
     ui->myMessage->clear();
     ui->positiveAction->setText("？");
     ui->negativeAction->setText("？");
+    ui->positiveAction->show();
+    ui->negativeAction->show();
     if (logic->order == 0) processCallingButtons();
     updateCards();
 }
@@ -89,6 +91,8 @@ void Game::updateCards() {
 }
 
 void Game::enableCards() {
+    ui->positiveAction->show();
+    ui->negativeAction->show();
     ui->positiveAction->setText("出牌");
     ui->negativeAction->setText("不要");
     ui->positiveAction->disconnect();
@@ -111,6 +115,8 @@ void Game::enableCards() {
 void Game::resetButtons() {
     ui->negativeAction->setEnabled(false);
     ui->positiveAction->setEnabled(false);
+    ui->negativeAction->hide();
+    ui->positiveAction->hide();
     for (const auto &cardButton : cardButtons) {
         cardButton->setEnabled(false);
         cardButton->setChecked(false);
