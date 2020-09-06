@@ -178,6 +178,8 @@ void Game::updateMessage(int id, const QString &message) {
 }
 
 void Game::onGameStops() {
+    ui->negativeAction->show();
+    ui->positiveAction->show();
     ui->negativeAction->setText("退出游戏");
     ui->positiveAction->setText("再来一局");
     ui->positiveAction->disconnect();
