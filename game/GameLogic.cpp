@@ -44,12 +44,15 @@ void GameLogic::onMessage(const Message &message) {
             if (otherNumber[lastDiscardId] <= 0) {
                 cout << lastDiscardId << " won." << endl;
                 emit messageUpdated(order, lastDiscardId == landlordId ? "地主胜利" : "农民胜利");
+                emit messageUpdated(lastDiscardId, lastDiscards.join(" "));
+                emit metaRefreshed();
                 emit gameStops();
+                break;
             } else if ((lastDiscardId + 1) % 3 == order) {
                 emit cardsEnabled();
             }
             emit metaRefreshed();
-            emit messageUpdated(lastDiscardId, lastDiscards.join(" "));
+            emit messageUpdated(order, lastDiscards.join(" "));
             break;
         }
         case PASS: {
@@ -117,7 +120,6 @@ void GameLogic::discard(const QStringList &cards) {
 
 void GameLogic::pass() {
     emit sendMessage({PASS, QString::number(order)});
-    emit messageUpdated(order, "不要");
 }
 
 void GameLogic::restart() {
