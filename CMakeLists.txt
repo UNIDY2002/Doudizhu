@@ -5,14 +5,14 @@ cmake_minimum_required(VERSION 3.15.4)
 project(Doudizhu)
 
 set(CMAKE_CXX_STANDARD 14)
-set(CMAKE_C_COMPILER C:/Qt/Tools/mingw810_64/bin/gcc)
-set(CMAKE_CXX_COMPILER C:/Qt/Tools/mingw810_64/bin/g++)
+set(CMAKE_C_COMPILER C:/Qt/Tools/mingw730_64/bin/gcc)
+set(CMAKE_CXX_COMPILER C:/Qt/Tools/mingw730_64/bin/g++)
 
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 
-set(CMAKE_PREFIX_PATH C:/Qt/5.15.0/mingw81_64)
+set(CMAKE_PREFIX_PATH C:/Qt/5.13.0/mingw73_64)
 
 # For new modules, simply add them here.
 find_package(Qt5 COMPONENTS Core Gui Network Widgets REQUIRED)

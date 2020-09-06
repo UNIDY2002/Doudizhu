@@ -5,7 +5,8 @@
 
 GameLogic::GameLogic(int order, const QStringList &cards, QObject *parent) :
         QObject(parent), order(order), cardPile(cards),
-        myCards(cards.begin() + (order * 17), cards.begin() + ((order + 1) * 17)) {
+        myCards(QStringList()) {
+    for (int i = order * 17; i < (order + 1) * 17; ++i) myCards.append(cards[i]);
     std::sort(myCards.begin(), myCards.end(), &cardCmp);
     cout << "You are " << order << endl;
 }
