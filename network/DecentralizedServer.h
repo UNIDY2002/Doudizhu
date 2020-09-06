@@ -24,9 +24,9 @@ public:
 
     QPair<int, QStringList> sendInitMessages();
 
-    void afterLinking() override;
+    void linkWithWelcome() override;
 
-    void prepare(GameLogic *logic) override;
+    void linkWithLogic(GameLogic *logic) override;
 
     void unlink();
 

@@ -12,7 +12,7 @@ DecentralizedClient::~DecentralizedClient() {
     delete client;
 }
 
-void DecentralizedClient::afterLinking() {
+void DecentralizedClient::linkWithWelcome() {
     (new WaitForConnectionThread(this, client, this))->start();
 }
 
@@ -22,12 +22,12 @@ void DecentralizedClient::waitForGameStarts() {
         if (client->waitForReadyRead()) {
             message = read(client);
         } else {
-            emit updateMessage("等待超时，请重试");
+            emit postMessageToWelcome("等待超时，请重试");
             return;
         }
     }
     if (message.type != GAME_STARTS || !processGameStartsMessage(message)) {
-        emit updateMessage("连接失败，请重试");
+        emit postMessageToWelcome("连接失败，请重试");
     }
 }
 
@@ -48,7 +48,7 @@ bool DecentralizedClient::processGameStartsMessage(const Message &message, GameL
             if (logicForHotswap != nullptr) {
                 emit logicForHotswap->hotswapWithInitParams(order, list);
             } else {
-                emit updateMessage("游戏开始");
+                emit postMessageToWelcome("游戏开始");
                 emit gameStarts(order, list);
             }
             return true;
@@ -57,7 +57,7 @@ bool DecentralizedClient::processGameStartsMessage(const Message &message, GameL
     return false;
 }
 
-void DecentralizedClient::prepare(GameLogic *logic) {
+void DecentralizedClient::linkWithLogic(GameLogic *logic) {
     connect(logic, &GameLogic::sendMessage, [=](const Message &message) {
         write(client, message);
     });

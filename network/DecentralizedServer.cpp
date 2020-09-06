@@ -47,7 +47,7 @@ void DecentralizedServer::addClient() {
     write(client, {CONFIRM_CONNECTION, QString::number(clientNumber)});
     if (clientNumber < 2) {
         clients[clientNumber++] = client;
-        emit updateMessage("等待连接 (" + QString::number(clientNumber) + "/2)");
+        emit postMessageToWelcome("等待连接 (" + QString::number(clientNumber) + "/2)");
         if (clientNumber == 2) {
             auto initData = sendInitMessages();
             emit gameStarts(initData.first, initData.second);
@@ -55,11 +55,11 @@ void DecentralizedServer::addClient() {
     }
 }
 
-void DecentralizedServer::afterLinking() {
-    emit updateMessage("等待连接 (0/2)");
+void DecentralizedServer::linkWithWelcome() {
+    emit postMessageToWelcome("等待连接 (0/2)");
 }
 
-void DecentralizedServer::prepare(GameLogic *logic) {
+void DecentralizedServer::linkWithLogic(GameLogic *logic) {
     for (int i = 0; i < 2; ++i) {
         connect(clients[i], &QTcpSocket::readyRead, [=]() {
             Message message;

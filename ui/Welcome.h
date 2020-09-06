@@ -25,8 +25,6 @@ public:
 
     ~Welcome() override;
 
-    void linkNetworkPolicy();
-
 public slots:
 
     void disableButtons();

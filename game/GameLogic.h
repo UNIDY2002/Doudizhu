@@ -35,6 +35,8 @@ public:
 
     ~GameLogic() override;
 
+    void onMessage(const Message &message);
+
 signals:
 
     void sendMessage(const Message &message);
@@ -58,10 +60,6 @@ signals:
     void hotswap();
 
     void hotswapWithInitParams(int order, const QStringList &cards);
-
-public slots:
-
-    void onMessage(const Message &message);
 
 private:
 

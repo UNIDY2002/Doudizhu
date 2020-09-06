@@ -13,14 +13,14 @@ public:
 
     ~DecentralizedClient() override;
 
-    void afterLinking() override;
+    void linkWithWelcome() override;
 
     /* possibly blocking method */
     void waitForGameStarts();
 
     bool processGameStartsMessage(const Message &message, GameLogic* logicForHotswap = nullptr);
 
-    void prepare(GameLogic *logic) override;
+    void linkWithLogic(GameLogic *logic) override;
 
 };
 

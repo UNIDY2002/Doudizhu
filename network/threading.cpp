@@ -6,7 +6,7 @@ WaitForConnectionThread::WaitForConnectionThread(QObject *parent, QTcpSocket *so
 WaitForConnectionThread::~WaitForConnectionThread() = default;
 
 void WaitForConnectionThread::run() {
-    emit policy->updateMessage("已发送连接请求");
+    emit policy->postMessageToWelcome("已发送连接请求");
     if (socket->waitForConnected() && socket->waitForReadyRead()) {
         auto message = read(socket);
         if (message.type == CONFIRM_CONNECTION) {
@@ -14,19 +14,19 @@ void WaitForConnectionThread::run() {
             auto number = message.payload.toInt(&ok);
             if (ok) {
                 if (number < 2) {
-                    emit policy->updateMessage("连接成功，请稍候");
+                    emit policy->postMessageToWelcome("连接成功，请稍候");
                     policy->waitForGameStarts();
                 } else {
-                    emit policy->updateMessage("人数已满，请重试");
+                    emit policy->postMessageToWelcome("人数已满，请重试");
                 }
             } else {
-                emit policy->updateMessage("连接失败，请重试");
+                emit policy->postMessageToWelcome("连接失败，请重试");
             }
         } else {
-            emit policy->updateMessage("连接失败，请重试");
+            emit policy->postMessageToWelcome("连接失败，请重试");
         }
     } else {
-        emit policy->updateMessage("连接超时，请重试");
+        emit policy->postMessageToWelcome("连接超时，请重试");
         // TODO: why cannot exit with code 0 in this case?
     }
 }

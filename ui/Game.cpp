@@ -22,11 +22,11 @@ Game::Game(NetworkPolicy *policy, int order, const QStringList &cards, QWidget *
 
 Game::~Game() {
     delete ui;
+    delete logic;
+    for (const auto &cardButton : cardButtons) delete cardButton;
 }
 
 void Game::init() {
-    updateCards();
-    policy->prepare(logic);
     connect(logic, &GameLogic::callingStatusUpdated, this, &Game::updateCallingStatus);
     connect(logic, &GameLogic::cardsUpdated, this, &Game::updateCards);
     connect(logic, &GameLogic::cardsEnabled, this, &Game::enableCards);
@@ -37,15 +37,18 @@ void Game::init() {
     connect(logic, &GameLogic::forceExit, this, &Game::onForceExit);
     connect(logic, &GameLogic::hotswap, this, &Game::onHotswap);
     connect(logic, &GameLogic::hotswapWithInitParams, this, &Game::onHotswapWithInitParams);
+    policy->linkWithLogic(logic);
 
-    if (logic->order == 0) processCallingButtons();
-
-    ui->upper->clear();
-    ui->lower->clear();
-    ui->dipai->clear();
+    ui->upper->setText("上家");
+    ui->lower->setText("下家");
+    ui->dipai->setText("底牌");
     ui->upperMessage->clear();
     ui->lowerMessage->clear();
     ui->myMessage->clear();
+    ui->positiveAction->setText("？");
+    ui->negativeAction->setText("？");
+    if (logic->order == 0) processCallingButtons();
+    updateCards();
 }
 
 void Game::processCallingButtons() {
@@ -56,14 +59,14 @@ void Game::processCallingButtons() {
     ui->positiveAction->disconnect();
     ui->negativeAction->disconnect();
     connect(ui->positiveAction, &QPushButton::clicked, [=]() {
+        resetButtons();
+        updateMessage(logic->order, ui->positiveAction->text());
         logic->call(true);
-        ui->positiveAction->setEnabled(false);
-        ui->negativeAction->setEnabled(false);
     });
     connect(ui->negativeAction, &QPushButton::clicked, [=]() {
+        resetButtons();
+        updateMessage(logic->order, ui->negativeAction->text());
         logic->call(false);
-        ui->positiveAction->setEnabled(false);
-        ui->negativeAction->setEnabled(false);
     });
 }
 
@@ -131,11 +134,9 @@ void Game::updateCallingStatus(int id, bool call, bool someoneCalled) {
 
 void Game::checkValidity() {
     pickedCardsCache.clear();
-    for (int i = 0; i < logic->myCards.size(); ++i) {
-        if (cardButtons[i]->isChecked()) {
+    for (int i = 0; i < logic->myCards.size(); ++i)
+        if (cardButtons[i]->isChecked())
             pickedCardsCache.append(logic->myCards[i]);
-        }
-    }
 
     std::sort(pickedCardsCache.begin(), pickedCardsCache.end(), cardCmp);
 

@@ -13,14 +13,14 @@ public:
 
     ~NetworkPolicy() override;
 
-    virtual void afterLinking() = 0;
+    virtual void linkWithWelcome() = 0;
 
-    virtual void prepare(GameLogic *logic) = 0;
+    virtual void linkWithLogic(GameLogic *logic) = 0;
 
 signals:
 
     // This message refers to the message shown on the preparation screen.
-    void updateMessage(const QString &msg);
+    void postMessageToWelcome(const QString &msg);
 
     void gameStarts(int order, const QStringList &cards);
 
